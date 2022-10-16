@@ -22,13 +22,13 @@ def translate(english_word)
   translation.text
 end
 
-def append_database_row(word)
+def append_database_row(word_en, word_ja)
   client = Notion::Client.new
 
   database_id = ENV['DATABASE_ID']
   properties = {
-    'English' => { title: [{ text: { content: word } }] },
-    'Japanese' => { rich_text: [{ text: { content: translate(word) } }] }
+    'English' => { title: [{ text: { content: word_en } }] },
+    'Japanese' => { rich_text: [{ text: { content: word_ja } }] }
   }
   parent = { database_id: }
   client.create_page(parent:, properties:)
@@ -36,8 +36,10 @@ end
 
 def main
   setup
-  append_database_row(ARGV[0])
-  puts 'success!'
+  word_en = ARGV[0]
+  word_ja = translate(word_en)
+  append_database_row(word_en, word_ja)
+  puts "#{word_en}: #{word_ja}"
 end
 
 main
