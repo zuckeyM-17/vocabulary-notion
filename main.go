@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/zuckeyM-17/vocabulary-notion/deepl"
 	"github.com/zuckeyM-17/vocabulary-notion/notion"
 
 	"github.com/joho/godotenv"
@@ -28,7 +29,7 @@ func main() {
 	}
 
 	notionToken := os.Getenv("NOTION_TOKEN")
-	// deeplApiKey := os.Getenv("DEEPL_API_KEY")
+	deeplApiKey := os.Getenv("DEEPL_API_KEY")
 	databaseId := os.Getenv("DATABASE_ID")
 
 	wordEntry, err := notion.SearchWord(wordEn, notionToken, databaseId)
@@ -37,4 +38,12 @@ func main() {
 	}
 
 	fmt.Println(wordEntry.Id, wordEntry.WordJa, wordEntry.Count)
+
+	wordJa, err := deepl.Translate(wordEn, deeplApiKey)
+	if err != nil {
+		errLog.Println(err)
+	}
+
+	fmt.Println(wordJa)
+
 }
