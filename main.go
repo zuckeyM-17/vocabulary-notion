@@ -37,13 +37,19 @@ func main() {
 		errLog.Println(err)
 	}
 
-	fmt.Println(wordEntry.Id, wordEntry.WordJa, wordEntry.Count)
+	wordJa := ""
+	if wordEntry.Id == "" {
+		w, err := deepl.Translate(wordEn, deeplApiKey)
+		wordJa = w
+		if err != nil {
+			errLog.Println(err)
+		}
 
-	wordJa, err := deepl.Translate(wordEn, deeplApiKey)
-	if err != nil {
-		errLog.Println(err)
+		notion.InsertWord(wordEn, wordJa, notionToken, databaseId)
+	} else {
+		wordJa = wordEntry.WordJa
+		notion.IncrementCount(wordEntry.Id, wordEntry.Count, notionToken)
 	}
 
-	fmt.Println(wordJa)
-
+	fmt.Println(wordEn, wordJa)
 }
