@@ -4,15 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/tidwall/gjson"
-)
-
-var (
-	errLog = log.New(os.Stderr, "[Error] ", 0)
+	"github.com/zuckeyM-17/vocabulary-notion/util"
 )
 
 type WordEntry struct {
@@ -56,7 +51,7 @@ func SearchWord(wordEn string, notionToken string, databaseId string) (WordEntry
 
 	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(d))
 	if err != nil {
-		errLog.Println(err)
+		util.ErrLog(err)
 		return WordEntry{}, err
 	}
 
@@ -70,7 +65,7 @@ func SearchWord(wordEn string, notionToken string, databaseId string) (WordEntry
 
 	res, err := client.Do(req)
 	if err != nil {
-		errLog.Println(err)
+		util.ErrLog(err)
 		return WordEntry{}, err
 	}
 	defer res.Body.Close()

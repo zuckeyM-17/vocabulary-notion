@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+
+	"github.com/zuckeyM-17/vocabulary-notion/util"
 )
 
 func InsertWord(wordEn string, wordJa string, notionToken string, databaseId string) {
@@ -52,13 +54,13 @@ func InsertWord(wordEn string, wordJa string, notionToken string, databaseId str
 	}
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
-		// handle err
+		util.ErrLog(err)
 	}
 	body := bytes.NewReader(payloadBytes)
 
 	req, err := http.NewRequest("POST", "https://api.notion.com/v1/pages", body)
 	if err != nil {
-		// handle err
+		util.ErrLog(err)
 	}
 	req.Header.Set("Authorization", "Bearer "+notionToken)
 	req.Header.Set("Content-Type", "application/json")
@@ -66,7 +68,7 @@ func InsertWord(wordEn string, wordJa string, notionToken string, databaseId str
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		// handle err
+		util.ErrLog(err)
 	}
 	defer resp.Body.Close()
 }

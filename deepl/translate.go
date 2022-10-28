@@ -2,17 +2,12 @@ package deepl
 
 import (
 	"io"
-	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/tidwall/gjson"
-)
-
-var (
-	errLog = log.New(os.Stderr, "[Error] ", 0)
+	"github.com/zuckeyM-17/vocabulary-notion/util"
 )
 
 func Translate(wordEn string, deeplApiKey string) (string, error) {
@@ -27,7 +22,7 @@ func Translate(wordEn string, deeplApiKey string) (string, error) {
 
 	req, err := http.NewRequest("POST", uri, strings.NewReader(params.Encode()))
 	if err != nil {
-		errLog.Println(err)
+		util.ErrLog(err)
 		return "", err
 	}
 
@@ -40,7 +35,7 @@ func Translate(wordEn string, deeplApiKey string) (string, error) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		errLog.Println(err)
+		util.ErrLog(err)
 		return "", err
 	}
 

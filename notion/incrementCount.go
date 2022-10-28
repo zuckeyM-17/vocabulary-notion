@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+
+	"github.com/zuckeyM-17/vocabulary-notion/util"
 )
 
 func IncrementCount(pageId string, count int64, notionToken string) {
@@ -31,13 +33,13 @@ func IncrementCount(pageId string, count int64, notionToken string) {
 
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
-		// handle err
+		util.ErrLog(err)
 	}
 
 	req, err := http.NewRequest("PATCH", "https://api.notion.com/v1/pages/"+pageId, bytes.NewReader(payloadBytes))
 
 	if err != nil {
-		// handle err
+		util.ErrLog(err)
 	}
 
 	req.Header.Set("Authorization", "Bearer "+notionToken)
@@ -46,7 +48,7 @@ func IncrementCount(pageId string, count int64, notionToken string) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		// handle err
+		util.ErrLog(err)
 	}
 
 	defer resp.Body.Close()
